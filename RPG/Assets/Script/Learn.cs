@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+
 public class Learn : MonoBehaviour
 {
     public int i;
