@@ -5,6 +5,9 @@ public class Player : MonoBehaviour
     [Header("移動速度"),Range(0,1000)]
     public float speed=1;
 
+    [Header("攝影機速度"), Range(0, 1000)]
+    public float turn = 1;
+
     [Header("攻擊")]
     private float ATK;
 
@@ -22,6 +25,7 @@ public class Player : MonoBehaviour
 
     private Rigidbody rig;
     private Animator ani;
+    private Transform cam;
 
     private void FixedUpdate()
     {
@@ -31,15 +35,22 @@ public class Player : MonoBehaviour
     {
         rig = GetComponent<Rigidbody>();
         ani = GetComponent<Animator>();
+        cam = GameObject.Find("攝影機根物件").transform;
     }
 
     private void Move()
     {
         float v = Input.GetAxis("Vertical");
         float h = Input.GetAxis("Horizontal");
-        Vector3 pos = transform.forward * v + transform.right * h;
+        Vector3 pos = cam.forward * v + cam.right * h;
         rig.MovePosition(transform.position + pos * speed);
         ani.SetFloat("移動", Mathf.Abs(v) + Mathf.Abs(h));
+        if (v!=0||h!=0)
+        {
+            pos.y = 0;
+            Quaternion ngle = Quaternion.LookRotation(pos);
+            transform.rotation = Quaternion.Slerp(transform.rotation, ngle, turn);
+        }
     }
 
     private void Speed()
