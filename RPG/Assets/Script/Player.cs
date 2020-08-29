@@ -22,6 +22,9 @@ public class Player : MonoBehaviour
 
     [Header("等級")]
     private float LV;
+    //隱藏
+    [HideInInspector]
+    public bool stop;
 
     private Rigidbody rig;
     private Animator ani;
@@ -29,6 +32,7 @@ public class Player : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if (stop) return;
         Move();   
     }
     private void Awake()

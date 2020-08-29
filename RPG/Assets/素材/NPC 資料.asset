@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: da7ac52293a6a444c851cd1634cadfb4, type: 3}
   m_Name: "NPC \u8CC7\u6599"
   m_EditorClassIdentifier: 
-  _NPCStste: 0
-  Count: 0
+  _NPCStste: 1
+  Count: 1
   dialongs:
-  - "\u64CA\u6BBA\u9AB7\u9ACF\u738B,\u4E0D\u7136\u5C31\u8B8A\u6210\u6A39"
+  - "\u64CA\u6BBA\u9AB7\u9ACF\u738B,\u4E0D\u7136\u5C31\u8B8A\u6210\u6A39\u5427!"
   - "\u60F3\u6210\u70BA\u68EE\u6797\u7684\u4E00\u90E8\u4EFD\u55CE?"
   - "\u6069,\u63B0"
