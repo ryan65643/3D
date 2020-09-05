@@ -18,6 +18,8 @@ public class NPC : MonoBehaviour
     public int C;
     [Header("任務區塊")]
     public RectTransform Panel;
+    [Header("傳送門")]
+    public GameObject[] doors;
     /// <summary>
     /// 對話系統
     /// </summary>
@@ -65,6 +67,10 @@ public class NPC : MonoBehaviour
     private void Mission()
     {
         if (C>=Date.Count) Date._NPCStste = NPCState.Finish;
+        for (int i = 0; i < doors.Length; i++)
+        {
+            doors[i].SetActive(true);
+        }
     }
 
     private IEnumerator MIssionMove()
@@ -84,10 +90,13 @@ public class NPC : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         if (other.name == "月") Dialong();
+
     }
 
     private void OnTriggerExit(Collider other)
     {
         if (other.name == "月") CloseDialong();
     }
+
+    
 }

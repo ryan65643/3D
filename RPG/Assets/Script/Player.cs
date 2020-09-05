@@ -26,6 +26,9 @@ public class Player : MonoBehaviour
     [HideInInspector]
     public bool stop;
 
+    [Header("傳送門")]
+    public Transform[] doors;
+
     private Rigidbody rig;
     private Animator ani;
     private Transform cam;
@@ -85,5 +88,31 @@ public class Player : MonoBehaviour
     private void lv()
     {
 
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.name == "傳送門")
+        {
+            transform.position = doors[1].position;
+            doors[1].GetComponent<CapsuleCollider>().enabled = false;
+            Invoke("OPENDOORN", 3);
+        }
+        if (other.name == "傳送門  (1)")
+        {
+            transform.position = doors[0].position;
+            doors[0].GetComponent<CapsuleCollider>().enabled = false;
+            Invoke("OPENDOORP", 3);
+        }
+    }
+
+    private void OPENDOORN()
+    {
+        doors[1].GetComponent<CapsuleCollider>().enabled = true;
+    }
+
+    private void OPENDOORP()
+    {
+        doors[0].GetComponent<CapsuleCollider>().enabled = true;
     }
 }
