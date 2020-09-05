@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 
 public class Player : MonoBehaviour
 {
@@ -9,19 +10,21 @@ public class Player : MonoBehaviour
     public float turn = 1;
 
     [Header("攻擊")]
-    private float ATK;
+    private float ATK=10;
 
     [Header("血量")]
-    private float HP;
+    private float HP=1000;
+
+    private float maxhp = 1000;
 
     [Header("魔力")]
-    private float MP;
+    private float MP=100;
 
     [Header("經驗")]
     private float EXP;
 
     [Header("等級")]
-    private float LV;
+    private float LV=1;
     //隱藏
     [HideInInspector]
     public bool stop;
@@ -32,6 +35,12 @@ public class Player : MonoBehaviour
     private Rigidbody rig;
     private Animator ani;
     private Transform cam;
+    [Header("介面區塊")]
+    public Image barhp;
+    public Image barmp;
+    public Image barexp;
+
+    
 
     private void FixedUpdate()
     {
@@ -65,9 +74,21 @@ public class Player : MonoBehaviour
 
     }
 
-    private void atk()
+    private void Dead()
     {
+        ani.SetBool("死亡開關", true);
+        enabled = false;
+    }
 
+    public void atk(float damge,Transform dis)
+    {
+        HP -=  damge;
+        ani.SetTrigger("受傷觸發");
+        rig.AddForce(dis.forward * 100);
+        print(HP);
+        HP = Mathf.Clamp(HP, 0, 9999999);
+        barhp.fillAmount = HP/maxhp;
+        if (HP == 0) Dead();
     }
 
     private void hp()
