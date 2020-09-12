@@ -19,12 +19,14 @@ public class Player : MonoBehaviour
 
     [Header("魔力")]
     private float MP=100;
+    private float MAXMP=1000;
 
     [Header("經驗")]
     private float EXP;
+    private float MAXEXP=100;
 
     [Header("等級")]
-    private float LV=1;
+    private int LV= 1;
 
     [Header("流星雨")]
     public Transform Stone ;
@@ -36,6 +38,7 @@ public class Player : MonoBehaviour
     public Transform[] doors;
     [HideInInspector]
     public float SA;
+    public float STONCAST;
     private Rigidbody rig;
     private Animator ani;
     private Transform cam;
@@ -43,8 +46,9 @@ public class Player : MonoBehaviour
     public Image barhp;
     public Image barmp;
     public Image barexp;
-
-    
+    private float REMP = 5;
+    private Text textLv;
+    public float[] exps = new float[999];
 
     private void FixedUpdate()
     {
@@ -52,12 +56,18 @@ public class Player : MonoBehaviour
         Move();
         ATTK();
         Skill();
+        REmp();
     }
     private void Awake()
     {
         rig = GetComponent<Rigidbody>();
         ani = GetComponent<Animator>();
         cam = GameObject.Find("攝影機根物件").transform;
+
+        for (int i = 0; i < exps.Length; i++)
+        {
+            exps[i] = 100 * (i + 1);
+        }
         
     }
 
@@ -80,8 +90,13 @@ public class Player : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Mouse1))
         {
+            if (STONCAST<=MP)
+            {
+                MP -= STONCAST;
+                barmp.fillAmount = MP / MAXMP;
             Vector3 pos = transform.forward * 3 + transform.up * 2;
             Instantiate(Stone, transform.position + pos, transform.rotation);
+            }
         }
     }
 
@@ -111,25 +126,42 @@ public class Player : MonoBehaviour
         if (HP == 0) Dead();
     }
 
-    private void hp()
+
+
+    public void exp(float getExp)
     {
-
-    }
-
-    private void mp()
-    {
-
-    }
-
-    private void exp()
-    {
-
+        EXP += getExp;
+        barexp.fillAmount = EXP / MAXEXP;
+        while (EXP>=MAXEXP)
+        {
+            lv();
+        }
     }
 
     private void lv()
     {
+        LV++;
+        maxhp += 10;
+        MAXMP += 10;
+        ATK += 10;
 
+        HP = maxhp;
+        MP = MAXMP;
+        EXP -=MAXEXP;
+        MAXEXP = exps[LV - 1];
+        barexp.fillAmount =EXP/MAXEXP;
+        barhp.fillAmount = 1;
+        barmp.fillAmount = 1;
+        textLv.text = "LV" + LV;
     }
+
+    public void REmp()
+    {
+        MP += REMP*Time.deltaTime;
+        MP = Mathf.Clamp(MP, 0, MAXMP);
+        barmp.fillAmount = MP / MAXMP;
+    }
+
 
     private void OnTriggerEnter(Collider other)
     {

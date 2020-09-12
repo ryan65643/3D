@@ -16,7 +16,7 @@ public class Enmey : MonoBehaviour
     private float Disdant = 800f;
 
     [Header("經驗")]
-    private float ExP = 1000;
+    private float ExP = 100;
 
     [Header("冷卻時間"), Range(30f, 3000f)]
     private float CD = 2.5f;
@@ -83,6 +83,8 @@ public class Enmey : MonoBehaviour
         GetComponent<CapsuleCollider>().enabled = false;
         ani.SetBool("死亡開關", true);
         enabled = false;
+        nav.isStopped = true;
+        Player.GetComponent<Player>().exp(ExP);
 
     }
     public void HIT(float damage,Transform direction)
