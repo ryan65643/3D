@@ -27,12 +27,14 @@ public class Enmey : MonoBehaviour
     private NavMeshAgent nav;
     private Transform Player;
     private Animator ani;
-    private float timer;    
+    private float timer;
+    private Rigidbody rig;
 
     private void Awake()
     {
         nav = GetComponent<NavMeshAgent>();
         ani = GetComponent<Animator>();
+        rig = GetComponent<Rigidbody>();
         nav.speed = speed;
         nav.stoppingDistance = Disdant;
         Player = GameObject.Find("月").transform;
@@ -64,7 +66,7 @@ public class Enmey : MonoBehaviour
         Move();
         
     }
-    private void Att()
+    public void Att()
     {
         Quaternion look = Quaternion.LookRotation(Player.position - transform.position);
         transform.rotation = Quaternion.Slerp(transform.rotation, look, Time.deltaTime * turn);
@@ -74,6 +76,30 @@ public class Enmey : MonoBehaviour
         {
         timer = 0;
         ani.SetTrigger("攻擊觸發");
+        }
+    }
+    public void Dead()
+    {
+        GetComponent<CapsuleCollider>().enabled = false;
+        ani.SetBool("死亡開關", true);
+        enabled = false;
+
+    }
+    public void HIT(float damage,Transform direction)
+    {
+        Hp -= damage;
+        ani.SetTrigger("受傷觸發");
+        rig.AddForce(direction.forward * 100+direction.up*150);
+        Hp = Mathf.Clamp(Hp, 0, 9999);
+
+        if (Hp == 0) Dead();
+    }
+
+    private void OnParticleCollision(GameObject other)
+    {
+        if (other.name=="碎石")
+        {
+            HIT(Player.GetComponent<Player>().SA, Player.transform);
         }
     }
 }

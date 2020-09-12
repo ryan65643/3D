@@ -25,13 +25,17 @@ public class Player : MonoBehaviour
 
     [Header("等級")]
     private float LV=1;
+
+    [Header("流星雨")]
+    public Transform Stone ;
     //隱藏
     [HideInInspector]
     public bool stop;
 
     [Header("傳送門")]
     public Transform[] doors;
-
+    [HideInInspector]
+    public float SA;
     private Rigidbody rig;
     private Animator ani;
     private Transform cam;
@@ -45,13 +49,16 @@ public class Player : MonoBehaviour
     private void FixedUpdate()
     {
         if (stop) return;
-        Move();   
+        Move();
+        ATTK();
+        Skill();
     }
     private void Awake()
     {
         rig = GetComponent<Rigidbody>();
         ani = GetComponent<Animator>();
         cam = GameObject.Find("攝影機根物件").transform;
+        
     }
 
     private void Move()
@@ -69,9 +76,21 @@ public class Player : MonoBehaviour
         }
     }
 
-    private void Speed()
+    private void Skill()
     {
+        if (Input.GetKeyDown(KeyCode.Mouse1))
+        {
+            Vector3 pos = transform.forward * 3 + transform.up * 2;
+            Instantiate(Stone, transform.position + pos, transform.rotation);
+        }
+    }
 
+    private void ATTK()
+    {
+        if (Input.GetKeyDown(KeyCode.Mouse0))
+        {
+            ani.SetTrigger("攻擊觸發");
+        }
     }
 
     private void Dead()
@@ -82,6 +101,7 @@ public class Player : MonoBehaviour
 
     public void atk(float damge,Transform dis)
     {
+       
         HP -=  damge;
         ani.SetTrigger("受傷觸發");
         rig.AddForce(dis.forward * 100);
@@ -124,6 +144,11 @@ public class Player : MonoBehaviour
             transform.position = doors[0].position;
             doors[0].GetComponent<CapsuleCollider>().enabled = false;
             Invoke("OPENDOORP", 3);
+        }
+        if (other.name=="BOSS")
+        {
+            other.GetComponent<Enmey>().HIT(ATK, transform);
+            print("123");
         }
     }
 
